@@ -22,8 +22,16 @@ module.exports = postcss.plugin('postcss-bw', function () {
           themeProps[prop] = { light: null, dark: null }
         }
         var theme = isLight ? 'light' : 'dark'
-        if (themeProps[prop][theme]) {
-          throw decl.error('Duplicate ' + decl.prop + ' declaration')
+        if (
+          themeProps[prop][theme] &&
+          decl.value !== themeProps[prop][theme].value
+        ) {
+          throw decl.error(
+            'Duplicate ' + decl.prop + ' declaration.' +
+            ' Previous declaration has value ' +
+            themeProps[prop][theme].value + '.' +
+            ' This one has value ' + decl.value
+          )
         } else {
           themeProps[prop][theme] = decl
         }
